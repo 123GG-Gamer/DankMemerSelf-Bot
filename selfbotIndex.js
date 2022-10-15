@@ -1,7 +1,6 @@
 const Discord = require("discord.js-selfbot-v13");
-const { exec } = require("child_process")
-const config = require("./config/botConfig.js");
-
+const { exec } = require("child_process");
+let config = require('./defaultBotConfig.js');
 /* destructuring and caching */
 const {
   ceil,
@@ -10,7 +9,6 @@ const {
   random,
 } = Math;
 const { parse, stringify } = JSON;
-const { testingStage, guild_id: GUILD_ID } = config;
 const { now: globalGetTime } = Date;
 
 const timeTable = {
@@ -104,7 +102,9 @@ module.exports = class {
   /*
   * @param {Object} info
   */
-  constructor(info) {
+  constructor(info, Config) {
+    /* Configuration */
+    config = {...Config, ...config}
     /* global stuff */
     console.log(`created new bot: ${info.prefix}`);
     bots.push(this);
@@ -186,7 +186,7 @@ module.exports = class {
         return;
       }
 
-      if (message.guild.id !== GUILD_ID) {
+      if (message.guild.id !== config.GUILD_ID) {
         /* non specified guild msgs code here */
         return;
       }
@@ -352,7 +352,7 @@ module.exports = class {
     /* Number (Date.now() + timeOffset) */
     let time = this.getTime;
     /* if we are testing, ignore active and inactive states */
-    if (testingStage) {
+    if (config.testingStage) {
       /* send commands */
       this.sendCommands(time);
       return;
